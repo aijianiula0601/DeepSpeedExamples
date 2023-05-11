@@ -13,16 +13,18 @@ out_dir="${base_dir}/outs"
 mkdir -p $out_dir
 
 llama_model_name='huggyllama/llama-7b'
+#llama_model_name="facebook/opt-1.3b"
+#llama_model_name="/mnt/cephfs/hjh/train_record/nlp/stanford_alpaca/pretrain_models/llama/junshi_llama-7b"
 data_path="Dahoas/rm-static"
-ZERO_STAGE=2
+ZERO_STAGE=3
 
 #-----------------
 # step 1
 #-----------------
 cd training/step1_supervised_finetuning
 
-CUDA_VISIBLE_DEVICES=4,5,6,7 \
-deepspeed main.py \
+#CUDA_VISIBLE_DEVICES=4,5,6,7 \
+deepspeed main_llama.py \
    --data_path ${data_path} \
    --data_split 2,4,4 \
    --model_name_or_path ${llama_model_name} \
@@ -38,4 +40,5 @@ deepspeed main.py \
    --seed 1234 \
    --zero_stage $ZERO_STAGE \
    --deepspeed \
-   --output_dir ${out_dir}
+   --output_dir ${out_dir} \
+   --offload
